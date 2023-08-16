@@ -6,7 +6,7 @@ remappings = [
 		'@openzeppelin/=lib/openzeppelin-contracts/',
 		# '@chainlink/=lib/chainlink-brownie-contracts',
     '@chainlink/contracts-ccip/=node_modules/@chainlink/contracts-ccip',
-		'@chainlink/contracts/=node_modules/@chainlink/contracts'
+		'@chainlink/contracts/=node_modules/@chainlink/contracts',
 ]
 solc = '0.8.19'
 

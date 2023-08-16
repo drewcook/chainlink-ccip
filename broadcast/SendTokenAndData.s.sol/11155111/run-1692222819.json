@@ -1,0 +1,59 @@
+{
+  "transactions": [
+    {
+      "hash": "0x66d4eaf8c044a18f608d631192bdd10e1a81ee3b253cd5de29be2cb2e50b3cd3",
+      "transactionType": "CALL",
+      "contractName": "CCIPTokenAndDataReceiver",
+      "contractAddress": "0xEf06311F3019AE44A3e3A1acf8b5cCbfB8D7d84f",
+      "function": "whitelistSender(address)",
+      "arguments": [
+        "0x24B15A2C5f9C561b3c743EE51BE03FF655be6452"
+      ],
+      "transaction": {
+        "type": "0x02",
+        "from": "0x847f115314b635f58a53471768d14e67e587cb56",
+        "to": "0xef06311f3019ae44a3e3a1acf8b5ccbfb8d7d84f",
+        "gas": "0xf917",
+        "value": "0x0",
+        "data": "0x2f10a6c600000000000000000000000024b15a2c5f9c561b3c743ee51be03ff655be6452",
+        "nonce": "0x2f",
+        "accessList": []
+      },
+      "additionalContracts": [],
+      "isFixedGasLimit": false
+    },
+    {
+      "hash": "0xda58e189ac1849f29deb49d2f3d06a42374934201087e57e321be47953e54856",
+      "transactionType": "CALL",
+      "contractName": "CCIPTokenAndDataReceiver",
+      "contractAddress": "0xEf06311F3019AE44A3e3A1acf8b5cCbfB8D7d84f",
+      "function": "whitelistSourceChain(uint64)",
+      "arguments": [
+        "14767482510784806043"
+      ],
+      "transaction": {
+        "type": "0x02",
+        "from": "0x847f115314b635f58a53471768d14e67e587cb56",
+        "to": "0xef06311f3019ae44a3e3a1acf8b5ccbfb8d7d84f",
+        "gas": "0x8d15",
+        "value": "0x0",
+        "data": "0x7736035b000000000000000000000000000000000000000000000000ccf0a31a221f3c9b",
+        "nonce": "0x30",
+        "accessList": []
+      },
+      "additionalContracts": [],
+      "isFixedGasLimit": false
+    }
+  ],
+  "receipts": [],
+  "libraries": [],
+  "pending": [
+    "0x66d4eaf8c044a18f608d631192bdd10e1a81ee3b253cd5de29be2cb2e50b3cd3",
+    "0xda58e189ac1849f29deb49d2f3d06a42374934201087e57e321be47953e54856"
+  ],
+  "returns": {},
+  "timestamp": 1692222819,
+  "chain": 11155111,
+  "multi": false,
+  "commit": "2890f86"
+}

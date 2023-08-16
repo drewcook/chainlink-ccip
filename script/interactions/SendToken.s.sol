@@ -19,17 +19,10 @@ contract SendCCIPBnMToken is Script {
         address fujiSender = 0xD5EDF980a866Fc87E2F578777a50a8dEC78B6A2F;
 
         // Whitelist the Sepolia destination chain
-        CCIPTokenSender(fujiSender).whitelistDestinationChain(
-            sepoliaChainSelector
-        );
+        CCIPTokenSender(fujiSender).whitelistDestinationChain(sepoliaChainSelector);
 
         // Send the CCIP Message
-        CCIPTokenSender(fujiSender).transferTokens(
-            sepoliaChainSelector,
-            fujiCCIPBnMToken,
-            receiver,
-            amount
-        );
+        CCIPTokenSender(fujiSender).transferTokens(sepoliaChainSelector, fujiCCIPBnMToken, receiver, amount);
 
         vm.stopBroadcast();
     }

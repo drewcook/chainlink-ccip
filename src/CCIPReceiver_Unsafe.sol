@@ -1,5 +1,5 @@
 /**
-	Recxeiver of a CCIP Message from Avalanche Fuji to Ethereum Sepolia. The latest message sender and data will be readable as storage variables.
+ * Recxeiver of a CCIP Message from Avalanche Fuji to Ethereum Sepolia. The latest message sender and data will be readable as storage variables.
  */
 
 // SPDX-License-Identifier: MIT
@@ -15,9 +15,7 @@ contract CCIPReceiver_Unsafe is CCIPReceiver {
     constructor(address _router) CCIPReceiver(_router) {}
 
     // Simply set the storage variables with the incoming CCIP Message data
-    function _ccipReceive(
-        Client.Any2EVMMessage memory _message
-    ) internal override {
+    function _ccipReceive(Client.Any2EVMMessage memory _message) internal override {
         lastSender = abi.decode(_message.sender, (address));
         lastMessage = abi.decode(_message.data, (address));
     }

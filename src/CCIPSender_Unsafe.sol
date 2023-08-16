@@ -1,5 +1,5 @@
 /**
-	Sending a CCIP Message from Avalanche Fuji to Ethereum Sepolia. The message will contain a generic string message and will pay for the CCIP fees in LINK.
+ * Sending a CCIP Message from Avalanche Fuji to Ethereum Sepolia. The message will contain a generic string message and will pay for the CCIP fees in LINK.
  */
 
 // SPDX-License-Identifier: MIT
@@ -21,11 +21,7 @@ contract CCIPSender_Unsafe {
     }
 
     // Send a CCIP message
-    function sendMessage(
-        uint64 _destinationChainSelector,
-        address _receiver,
-        string memory _message
-    ) external {
+    function sendMessage(uint64 _destinationChainSelector, address _receiver, string memory _message) external {
         Client.EVM2AnyMessage memory message = Client.EVM2AnyMessage({
             receiver: abi.encode(_receiver),
             data: abi.encode(_message),

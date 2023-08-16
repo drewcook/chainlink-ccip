@@ -8,8 +8,7 @@ import {CCIPReceiver} from "@chainlink/contracts-ccip/src/v0.8/ccip/applications
 import {Client} from "@chainlink/contracts-ccip/src/v0.8/ccip/libraries/Client.sol";
 
 contract MyNFT is ERC721URIStorage, OwnerIsCreator {
-    string constant TOKEN_URI =
-        "https://ipfs.io/ipfs/QmYuKY45Aq87LeL1R5dhb1hqHLp6ZFbJaCP8jxqKM1MX6y/babe_ruth_1.json";
+    string constant TOKEN_URI = "https://ipfs.io/ipfs/QmYuKY45Aq87LeL1R5dhb1hqHLp6ZFbJaCP8jxqKM1MX6y/babe_ruth_1.json";
     uint256 internal tokenId;
 
     constructor() ERC721("MyNFT", "MNFT") {}
@@ -36,8 +35,9 @@ contract CCIPTokenAndDataReceiver is CCIPReceiver, OwnerIsCreator {
     error SenderNotWhitelisted(address sender);
 
     modifier onlyWhitelistedSourceChain(uint64 _sourceChainSelector) {
-        if (!whitelistedSourceChains[_sourceChainSelector])
+        if (!whitelistedSourceChains[_sourceChainSelector]) {
             revert SourceChainNotWhitelisted(_sourceChainSelector);
+        }
         _;
     }
 
@@ -51,15 +51,11 @@ contract CCIPTokenAndDataReceiver is CCIPReceiver, OwnerIsCreator {
         price = _price;
     }
 
-    function whitelistSourceChain(
-        uint64 _sourceChainSelector
-    ) external onlyOwner {
+    function whitelistSourceChain(uint64 _sourceChainSelector) external onlyOwner {
         whitelistedSourceChains[_sourceChainSelector] = true;
     }
 
-    function denylistSourceChain(
-        uint64 _sourceChainSelector
-    ) external onlyOwner {
+    function denylistSourceChain(uint64 _sourceChainSelector) external onlyOwner {
         whitelistedSourceChains[_sourceChainSelector] = false;
     }
 
@@ -71,19 +67,14 @@ contract CCIPTokenAndDataReceiver is CCIPReceiver, OwnerIsCreator {
         whitelistedSenders[_sender] = false;
     }
 
-    function _ccipReceive(
-        Client.Any2EVMMessage memory message
-    )
+    function _ccipReceive(Client.Any2EVMMessage memory message)
         internal
         override
         onlyWhitelistedSourceChain(message.sourceChainSelector)
         onlyWhitelistedSenders(abi.decode(message.sender, (address)))
     {
-        require(
-            message.destTokenAmounts[0].amount >= price,
-            "Not enough CCIP-BnM for mint"
-        );
-        (bool success, ) = address(nft).call(message.data);
+        require(message.destTokenAmounts[0].amount >= price, "Not enough CCIP-BnM for mint");
+        (bool success,) = address(nft).call(message.data);
         require(success);
         emit MintCallSuccessfull();
     }

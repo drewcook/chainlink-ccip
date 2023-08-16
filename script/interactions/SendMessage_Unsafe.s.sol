@@ -16,14 +16,9 @@ contract SendMessage_Unsafe is Script {
         // CCIP selector for Ethereum Sepolia
         uint64 destinationChainSelector = 16015286601757825753;
         // Our custom, cross-chain message
-        string
-            memory message = "Hello, it's me. I was wondering if after all these years you'd like to meet.";
+        string memory message = "Hello, it's me. I was wondering if after all these years you'd like to meet.";
 
-        CCIPSender_Unsafe(fujiSender).sendMessage(
-            destinationChainSelector,
-            sepoliaReceiver,
-            message
-        );
+        CCIPSender_Unsafe(fujiSender).sendMessage(destinationChainSelector, sepoliaReceiver, message);
 
         vm.stopBroadcast();
     }

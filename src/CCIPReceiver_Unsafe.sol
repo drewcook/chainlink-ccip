@@ -10,7 +10,7 @@ import {CCIPReceiver} from "@chainlink/contracts-ccip/src/v0.8/ccip/applications
 
 contract CCIPReceiver_Unsafe is CCIPReceiver {
     address public lastSender;
-    address public lassMessage;
+    address public lastMessage;
 
     constructor(address _router) CCIPReceiver(_router) {}
 
@@ -19,6 +19,6 @@ contract CCIPReceiver_Unsafe is CCIPReceiver {
         Client.Any2EVMMessage memory _message
     ) internal override {
         lastSender = abi.decode(_message.sender, (address));
-        lassMessage = abi.decode(_message.data, (address));
+        lastMessage = abi.decode(_message.data, (address));
     }
 }

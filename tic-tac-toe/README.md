@@ -1,11 +1,10 @@
-## CCIP Tic-Tac-Toe 
+## CCIP Tic-Tac-Toe
 
 > **Note**
 >
 > _This repository represents an example of using a Chainlink product or service. It is provided to help you understand how to interact with Chainlink’s systems so that you can integrate them into your own. This template is provided "AS IS" without warranties of any kind, has not been audited, and may be missing key checks or error handling to make the usage of the product more clear. Take everything in this repository as an example and not something to be copy pasted into a production ready service._
 
 This project demonstrates how Chainlink CCIP can be used to create a cross-chain Tic-Tac-Toe game
-
 
 ## Prerequisites
 
@@ -37,6 +36,7 @@ npm install
 ```
 npx hardhat compile
 ```
+
 Comment out `import './tasks'` line in the file `hardhat.config` if you have issue of it. Please don't forget uncomment the line after compiling.
 
 3. Run tests
@@ -103,13 +103,15 @@ npx env-enc view
 ```
 
 ## Example: Cross-chain Tic Tac Toe Game
-In this example, we will use a simple game called TicTacToe to demonstrate how to transmit messages from one chain to another using CCIP. 
+
+In this example, we will use a simple game called TicTacToe to demonstrate how to transmit messages from one chain to another using CCIP.
 
 In the game, we will deploy the TicTacToe smart contract on two different blockchains. By sending a transaction on the source chain, which can be either "start" or "move," the state of the game board will be modified, and these states will be "synchronized" by Chainlink CCIP on the other chain.
 
 Before starting the game, the contract needs to be deployed on two different blockchains using the following commands:
 
 ### 1. Deploy TicTacToe smart contract
+
 ```shell
 npx hardhat run ./scripts/deployTicTacToe.ts --network <blockchain>
 npx hardhat run ./scripts/deployTicTacToe.ts --network <blockchain>
@@ -131,78 +133,135 @@ npx hardhat run ./scripts/deployTicTacToe.ts --network avalancheFuji
 ```
 
 ### 2. Transfer native tokens to TicTacToe smart contract
+
 After the deployment of the contract, you must transfer native tokens to these 2 contracts respectively. If you deployed contracts on Fuji and Sepolia, please transfer 2 AVAX and 0.01 ETH to contracts on Fuji and Sepolia respectively.
 
 ### 3. Update router
-Please use commands below to update router address for `ccipSend`. For most of cases, the router addresses input here are same as router addresses of CCIP. 
+
+Please use commands below to update router address for `ccipSend`. For most of cases, the router addresses input here are same as router addresses of CCIP.
+
 ```shell
 npx hardhat ttt-update-router --blockchain ethereumSepolia --contract <address of TicTacToe on Ethereum Sepolia> --router 0xd0daae2231e9cb96b94c8512223533293c3693bf
 npx hardhat ttt-update-router --blockchain avalancheFuji --contract <address of TicTacToe on Avalanche Fuji> --router 0x554472a2720e5e7d5d3c817529aba05eed5f82d8
 ```
-Since you can have your own proxy to forward request to CCIP, update the addresses above with your own proxy addresses if you want to use proxies. If you don't want to use proxies, keep the router addresses the same as CCIP. 
+
+Since you can have your own proxy to forward request to CCIP, update the addresses above with your own proxy addresses if you want to use proxies. If you don't want to use proxies, keep the router addresses the same as CCIP.
 
 Router addresses are listed below:
+
 - Ethereum Sepolia: 0xd0daae2231e9cb96b94c8512223533293c3693bf
 - Polygon Mumbai: 0x70499c328e1e2a3c41108bd3730f6670a44595d1
 - Optimism Goerli: 0xeb52e9ae4a9fb37172978642d4c141ef53876f26
 - Avalanche Fuji: 0x554472a2720e5e7d5d3c817529aba05eed5f82d8
 - Arbitrum Goerli: 0x88e492127709447a5abefdab8788a15b4567589e
 
-
 ### 4. Player 1 starts a game
+
 You can start a new game through a TicTacToe contract on any chain. The player who starts a game is player 1. Player 1 needs to send a transaction to create a session, allowing the other player on the other chain to join that session and make a move.
 
 Start a game with the command blow:
+
 ```shell
 npx hardhat ttt-start --source-blockchain ethereumSepolia --sender <address of TicTacToe on Ethereum Sepolia> --destination-blockchain avalancheFuji --receiver <address of TicTacToe on Avalanche Fuji>
 ```
+
 You will see the message below in the terminal and that means the message is sent by CCIP.
+
 ```
 ✅ Message sent, game session created! transaction hash: 0x1f65e17eef0fd9664c389d825db317ec385fe5b1f79baa62aded05583f980e1a
 ```
-While the message sent to CCIP, the status would not be synced until the the message is finalized on source chain and written into the contract on the other chain. Check the information in CCIP explorer and find message below to make sure the message sent to the dest chain. 
+
+While the message sent to CCIP, the status would not be synced until the the message is finalized on source chain and written into the contract on the other chain. Check the information in CCIP explorer and find message below to make sure the message sent to the dest chain.
 
 ![alt text](./img/messageInCCIP.png "Coordinates")
 
 Usually it takes about 20mins to complete the cross-chain transaction.
 
-
 ### 5. Get session ID by index
+
 In order to join a game, a player needs to know the session ID of the game.
 
-Get the session ID of the game by index with the command below: 
+Get the session ID of the game by index with the command below:
+
 ```shell
 npx hardhat ttt-get-sessionId --blockchain ethereumSepolia --contract <address of TicTacToe on Ethereum Sepolia> --index 0
 ```
 
 ### 6. Player 2 makes a move in blockchain 2
+
 Player 2 on the other chain can make a move within the game session. The player needs to select a position with x and y coordinates(the range of x and y are from 0 to 2) with the command below:
+
 ```shell
 npx hardhat ttt-move --x <x coordinate> --y <y coordinate> --player 2 --session-id <sessionId> --source-blockchain avalancheFuji --sender <address of TicTacToe on Avalanche Fuji> --destination-blockchain ethereumSepolia --receiver <address of TicTacToe on Ethereum Sepolia>
 ```
+
 the x and y are coordinates in the board. eg:
 
 ![alt text](./img/xyCoordinates.png "Coordinates")
 
 ### 7. Player 1 makes a move in blockchain 1
+
 After player 2 made the move, player 1 can make the move with x and y coordinates. Please noted that transaction will fail if the position of represented by x and y coordinates is occupied.
 
 Player 1 makes a move with command below:
+
 ```shell
 npx hardhat ttt-move --x <x coordinate> --y <y coordinate> --player 2 --session-id <sessionId> --source-blockchain ethereumSepolia --sender <address of TicTacToe on Ethereum Sepolia> --destination-blockchain avalancheFuji --receiver <address of TicTacToe on Avalanche Fuji>
 ```
 
 ### 8. Repeat 6 and 7
+
 Repeat steps 6 and 7 until either combination of player 1 or player 2 matches a winning combination.
+
 ### 9. Check the winner
+
 Check the winner by command:
+
 ```shell
 npx hardhat ttt-check-winner --blockchain ethereumSepolia --contract <address of TicTacToe on Ethereum Sepolia> --session-id <sessionId>
 ```
+
 you can also check the winner from the contract on the other blockChain with command:
+
 ```shell
 npx hardhat ttt-check-winner --blockchain avalancheFuji --contract <address of TicTacToe on Avalanche Fuji> --session-id <sessionId>
 ```
 
 ### Front-end of Tic-Tac-Toe
+
 If you're interested in trying to interact with CCIP Tic-Tac-Toe using the frontend, please refer to the frontend [README.md](./frontend/README.md) here to learn how to use it.
+
+## Additional Notes
+
+Here's an example workflow of a deployed game.
+
+1. Deploy contract to two different chains
+2. Set the router for each particular chain (i.e match the given chain)
+3. Start the game, the player who starts the game is Player 1
+4. Make a move as Player 2 and join the existing Session ID of the game, passing in different values for `--x` and `--y` (tx will revert if space is already marked)
+5. Make a move as Player 1 against the existing Session ID of the game, passing in different values for `--x` and `--y` (tx will revert if space is already marked)
+6. Repeat steps 4-5 until the game ends
+7. Check the winner, which can be performed on either chain the game is deployed to
+
+```sh
+# Deploy TicTacToe contract to Sepolia and Fuji
+npx hardhat ttt-update-router --blockchain ethereumSepolia --contract 0xDb90452e37b0BF067D93768cf9442f0aD4afaCF7 --router 0xd0daae2231e9cb96b94c8512223533293c3693bf
+npx hardhat ttt-update-router --blockchain avalancheFuji --contract 0x495870D00c1753183bFF268a4Fc86DD56b275B93 --router 0x554472a2720e5e7d5d3c817529aba05eed5f82d8
+
+# Start Game
+npx hardhat ttt-start --source-blockchain ethereumSepolia --sender 0xDb90452e37b0BF067D93768cf9442f0aD4afaCF7 --destination-blockchain avalancheFuji --receiver 0x495870D00c1753183bFF268a4Fc86DD56b275B93
+
+# Join Game by Session ID
+npx hardhat ttt-get-sessionId --blockchain ethereumSepolia --contract 0xDb90452e37b0BF067D93768cf9442f0aD4afaCF7 --index 0
+
+# Player 2 Make Moves from Fuji
+npx hardhat ttt-move --x 0 --y 2 --player 2 --session-id 0x9a816ecc8330644f08716f7e46a023ea1cb466c5fdc31d5f859eda5d2af248b6 --source-blockchain avalancheFuji --sender 0x495870D00c1753183bFF268a4Fc86DD56b275B93 --destination-blockchain ethereumSepolia --receiver 0xDb90452e37b0BF067D93768cf9442f0aD4afaCF7
+
+# Player 1 Make Moves from Sepolia
+npx hardhat ttt-move --x 2 --y 0 --player 1 --session-id 0x9a816ecc8330644f08716f7e46a023ea1cb466c5fdc31d5f859eda5d2af248b6 --source-blockchain ethereumSepolia --sender 0xDb90452e37b0BF067D93768cf9442f0aD4afaCF7 --destination-blockchain avalancheFuji --receiver 0x495870D00c1753183bFF268a4Fc86DD56b275B93
+
+# Continue until game is over, then check winner on either chain
+npx hardhat ttt-check-winner --blockchain ethereumSepolia --contract 0xDb90452e37b0BF067D93768cf9442f0aD4afaCF7 --session-id 0x9a816ecc8330644f08716f7e46a023ea1cb466c5fdc31d5f859eda5d2af248b6
+
+npx hardhat ttt-check-winner --blockchain avalancheFuji --contract 0x495870D00c1753183bFF268a4Fc86DD56b275B93 --session-id 0x9a816ecc8330644f08716f7e46a023ea1cb466c5fdc31d5f859eda5d2af248b6
+```

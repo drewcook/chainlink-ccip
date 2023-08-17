@@ -12,7 +12,8 @@ import {ERC721URIStorage} from "@openzeppelin/contracts/token/ERC721/extensions/
 import {ERC721} from "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 
 contract CCIPCustomNFT is ERC721URIStorage, OwnerIsCreator {
-    string constant TOKEN_URI = "https://ipfs.io/ipfs/QmYuKY45Aq87LeL1R5dhb1hqHLp6ZFbJaCP8jxqKM1MX6y/babe_ruth_1.json";
+    string constant TOKEN_URI =
+        "https://ipfs.io/ipfs/QmYuKY45Aq87LeL1R5dhb1hqHLp6ZFbJaCP8jxqKM1MX6y/babe_ruth_1.json";
     uint256 tokenId;
 
     constructor() ERC721("CCIPCustomNFT", "CCIPNFT") {}
@@ -34,14 +35,18 @@ contract CCIPTokenAndDataReceiver is CCIPReceiver, OwnerIsCreator {
     mapping(uint64 => bool) public whitelistedSourceChains;
     mapping(address => bool) public whitelistedSenders;
 
-    error CCIPTokenAndDataReceiver__SourceChainNotWhitelisted(uint64 sourceChainSelector);
+    error CCIPTokenAndDataReceiver__SourceChainNotWhitelisted(
+        uint64 sourceChainSelector
+    );
     error CCIPTokenAndDataReceiver__SenderNotWhitelisted(address sender);
 
     event MintCallSuccessful();
 
     modifier onlyWhitelistedSourceChains(uint64 _sourceChainSelector) {
         if (!whitelistedSourceChains[_sourceChainSelector]) {
-            revert CCIPTokenAndDataReceiver__SourceChainNotWhitelisted(_sourceChainSelector);
+            revert CCIPTokenAndDataReceiver__SourceChainNotWhitelisted(
+                _sourceChainSelector
+            );
         }
         _;
     }
@@ -57,7 +62,9 @@ contract CCIPTokenAndDataReceiver is CCIPReceiver, OwnerIsCreator {
         price = _price;
     }
 
-    function whitelistSourceChain(uint64 _sourceChainSelector) external onlyOwner {
+    function whitelistSourceChain(
+        uint64 _sourceChainSelector
+    ) external onlyOwner {
         whitelistedSourceChains[_sourceChainSelector] = true;
     }
 
@@ -73,14 +80,19 @@ contract CCIPTokenAndDataReceiver is CCIPReceiver, OwnerIsCreator {
         whitelistedSenders[_sender] = false;
     }
 
-    function _ccipReceive(Client.Any2EVMMessage memory _message)
+    function _ccipReceive(
+        Client.Any2EVMMessage memory _message
+    )
         internal
         override
         onlyWhitelistedSourceChains(_message.sourceChainSelector)
         onlyWhitelisteSenders(abi.decode(_message.sender, (address)))
     {
-        require(_message.destTokenAmounts[0].amount >= price, "Not enough tokens (CCIP-BnM) sent to cover mint price");
-        (bool success,) = address(nft).call(_message.data);
+        require(
+            _message.destTokenAmounts[0].amount >= price,
+            "Not enough tokens (CCIP-BnM) sent to cover mint price"
+        );
+        (bool success, ) = address(nft).call(_message.data);
         require(success, "Mint call failed");
         emit MintCallSuccessful();
     }

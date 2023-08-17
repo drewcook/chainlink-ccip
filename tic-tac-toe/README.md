@@ -233,6 +233,11 @@ If you're interested in trying to interact with CCIP Tic-Tac-Toe using the front
 
 ## Additional Notes
 
+There is a deployed game on Fuji and Sepolia:
+
+- Sepolia: <https://sepolia.etherscan.io/address/0xDb90452e37b0BF067D93768cf9442f0aD4afaCF7>
+- Fuji: <https://testnet.snowtrace.io/address/0x495870D00c1753183bFF268a4Fc86DD56b275B93>
+
 Here's an example workflow of a deployed game.
 
 1. Deploy contract to two different chains
